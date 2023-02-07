@@ -1,0 +1,39 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.7'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'pl.kagmajn.writer'
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation "org.springframework.boot:spring-boot-starter-web:2.7.7"
+	implementation 'com.google.protobuf:protobuf-java:3.21.7'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4.2'
+
+	testImplementation 'junit:junit:4.13.2'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Lombok
+	implementation "org.projectlombok:lombok:1.18.24"
+	annotationProcessor "org.projectlombok:lombok:1.18.24"
+	testCompileOnly "org.projectlombok:lombok:1.18.24"
+	testAnnotationProcessor "org.projectlombok:lombok:1.18.24"
+}
+
+test {
+	testLogging {
+		events "passed", "skipped", "failed", "standardOut", "standardError"
+	}
+}
+
+wrapper() {
+	gradleVersion = '7.2'
+	distributionUrl = "https://nexus.gcp.global.ckpl.io/repository/gradle-dists/distributions/gradle-${gradleVersion}-bin.zip"
+}
