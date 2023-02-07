@@ -3,10 +3,18 @@ package pl.kagmajn.writer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import pl.kagmajn.writer.api.JsonFormatter;
+import pl.kagmajn.writer.api.MongoWriter;
+import pl.kagmajn.writer.api.RestService;
+import pl.kagmajn.writer.config.BeansConfiguration;
 import pl.kagmajn.writer.config.GCPconfiguration;
+import pl.kagmajn.writer.config.MongoConfiguration;
+import pl.kagmajn.writer.config.ServerConfiguration;
 import pl.kagmajn.writer.controller.HealthController;
+import pl.kagmajn.writer.controller.StatusController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,47 +23,38 @@ import java.util.Map;
 @Slf4j
 public class EventWriter {
 
-    private final JsonFormatter jsonFormatter;
-
     private final GCPconfiguration configuration;
-
+    private final MongoConfiguration mongoConfiguration;
+    private final ServerConfiguration serverConfiguration;
     @Autowired
-    public EventWriter(final GCPconfiguration configuration, final JsonFormatter jsonFormatter){
-
+    public EventWriter(final GCPconfiguration configuration,
+                       final MongoConfiguration mConfiguration,
+                       final ServerConfiguration serverConfiguration){
+        // begin of program
+        // define config files
         this.configuration = configuration;
-        this.jsonFormatter = jsonFormatter;
+        this.mongoConfiguration = mConfiguration;
+        this.serverConfiguration = serverConfiguration;
 
-        log.info("@@@@@@@@@@@@@@@@@@@@@@@@");
+        log.info("@@@@@@ MAIN @@@@@@");
         log.info("{}", configuration.getProject());
-        log.info("@@@@@@@@@@@@@@@@@@@@@@@@");
 
         HealthController.setHealthy(true);
+        StatusController.setHealthy(false);
 
         try{
-            log.info("hello git!");
             log.info("App running");
-            log.info("localhost:8899");
-            forexEventWriter();
-
-            Map<String, Object> mapResult = new HashMap<>();
-
-            mapResult.put("name", "Patryk");
-            mapResult.put("job", "Data Engineer");
-
-            String res = jsonFormatter.jsonObjectMapper(null);
-
-            log.info(res);
+            log.info("localhost:{}", serverConfiguration.getPort());
+            log.info("Connected to Mongo: {}", mConfiguration.getDatabase());
             log.info("App success");
         } catch (Exception e) {
-            log.error("Error while exporting data: {}", e);
+            log.error("@@@@@@@@@@@@ ERROR @@@@@@@@@@@@");
+            log.error("Error while exporting data: ", e);
+            log.error("@@@@@@@@@@@@ ERROR @@@@@@@@@@@@");
         }
-    }
-    public void forexEventWriter() throws Exception {
-        try {
-            log.info("Writing events to bigquery");
-        } catch (Exception e) {
-            log.info("Error while writing events to bigquery", e);
-        }
+
+        // end of program
+        log.info("@@@@@@ MAIN @@@@@@");
     }
 }
 

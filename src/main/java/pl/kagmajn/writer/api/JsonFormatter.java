@@ -1,10 +1,7 @@
-package pl.kagmajn.writer;
+package pl.kagmajn.writer.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -28,8 +25,8 @@ public class JsonFormatter {
             return objectMapper.writeValueAsString(event);
 
         } catch (Exception e) {
-            log.info("Error: {}", e);
-            return null;
+            log.error("Error: {}", e);
+            return "{\"error\": \"" + e + "\"}";
         }
     }
 }

@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Local configuration
+.properties
+project.properties
+*.properties
